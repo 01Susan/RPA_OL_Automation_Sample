@@ -1,5 +1,6 @@
 import xlsxwriter
 import random
+from validator import is_nan
 
 
 def worksheet_writer(carrier_list):
@@ -9,9 +10,16 @@ def worksheet_writer(carrier_list):
     carrier_list = random.sample(carrier_list, 30)
     carrier_list = sorted(carrier_list, key=lambda x: x["carrier"])
     for i in carrier_list:
-        new_sheet.write(row, col, i["mbl"])
+        if is_nan(i["mbl"]):
+            new_sheet.write(row, col, "")
+        else:
+            new_sheet.write(row, col, i["mbl"])
+
         col += 1
-        new_sheet.write(row, col, i["container"])
+        if is_nan(i["container"]):
+            new_sheet.write(row, col, "")
+        else:
+            new_sheet.write(row, col, i["container"])
         col += 1
         new_sheet.write(row, col, i["carrier"])
         row += 1

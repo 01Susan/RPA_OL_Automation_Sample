@@ -7,13 +7,12 @@ import sys
 def main(filename):
     carrier_list = []
     csv = pd.read_csv(filename, usecols=["Container #", "MBL Number", "Carrier Name"])
-    column = csv.columns
     carrier, mbl, container = list(csv["Carrier Name"].values), list(csv["MBL Number"].values), list(
         csv["Container #"].values)
     csv_length = total_csv_line(filename)
 
     for i in range(csv_length - 1):
-        if not is_nan(carrier[i]) and not is_nan(mbl[i]) and not is_nan(container[i]):
+        if not is_nan(carrier[i]):
             if check_key(carrier[i], carrier_list):
                 carrier_list.append({
                     "carrier": carrier[i],
