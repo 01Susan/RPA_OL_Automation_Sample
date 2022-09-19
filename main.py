@@ -1,54 +1,33 @@
-import math
-import random
-import xlsxwriter
 import pandas as pd
-
-csv = pd.read_csv("OL.csv", usecols=["Container #", "MBL Number", "Carrier Name"])
-column = csv.columns
-carrier = list(csv["Carrier Name"].values)
-mbl = list(csv["MBL Number"].values)
-container = list(csv["Container #"].values)
-new_list = []
-row, col = 0, 0
-sum_var = 0
-with open("OL.csv", encoding="cp850") as f:
-    sum_var = sum(1 for line in f)
+from Validator import check_key, is_nan, total_csv_line
+from worksheet import worksheet_writer
+import sys
 
 
-def is_nan(x):
-    try:
-        return math.isnan(x)
-    except:
-        return False
+def main(filename):
+    carrier_list = []
+    csv = pd.read_csv(filename, usecols=["Container #", "MBL Number", "Carrier Name"])
+    column = csv.columns
+    carrier, mbl, container = list(csv["Carrier Name"].values), list(csv["MBL Number"].values), list(
+        csv["Container #"].values)
+    csv_length = total_csv_line(filename)
 
-
-def checkKey(carrier_name, carrier_list):
-    for i in carrier_list:
-        if i["carrier"] == carrier_name:
-            return False
-    return True
-
-
-for i in range(1, sum_var - 1):
-    try:
+    for i in range(csv_length - 1):
         if not is_nan(carrier[i]) and not is_nan(mbl[i]) and not is_nan(container[i]):
-            if checkKey(carrier[i], new_list):
-                new_list.append({
+            if check_key(carrier[i], carrier_list):
+                carrier_list.append({
                     "carrier": carrier[i],
                     "mbl": mbl[i],
                     "container": container[i]
                 })
-    except:
-        pass
 
-new_workbook = xlsxwriter.Workbook("sheet.xlsx")
-new_sheet = new_workbook.add_worksheet()
-for i in (random.sample(new_list, 30)):
-    new_sheet.write(row, col, i["mbl"])
-    col += 1
-    new_sheet.write(row, col, i["container"])
-    col += 1
-    new_sheet.write(row, col, i["carrier"])
-    row += 1
-    col = 0
-new_workbook.close()
+    worksheet_writer(carrier_list)
+
+
+filename_user = ""
+try:
+    filename_user = sys.argv[1].replace('"', "")
+except IndexError:
+    filename_user = input("Enter the File Path: \n").replace('"', "")
+
+main(filename_user)
