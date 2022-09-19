@@ -1,5 +1,5 @@
 import pandas as pd
-from Validator import check_key, is_nan, total_csv_line
+from validator import check_key, is_nan, total_csv_line
 from worksheet import worksheet_writer
 import sys
 
