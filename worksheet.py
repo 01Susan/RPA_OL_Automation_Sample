@@ -7,7 +7,7 @@ def worksheet_writer(carrier_list):
     row, col = 0, 0
     new_workbook = xlsxwriter.Workbook("sheet.xlsx")
     new_sheet = new_workbook.add_worksheet()
-    carrier_list = random.sample(carrier_list, 30)
+    carrier_list = random.sample(carrier_list, 100)
     carrier_list = sorted(carrier_list, key=lambda x: x["carrier"])
     for i in carrier_list:
         if is_nan(i["mbl"]):
